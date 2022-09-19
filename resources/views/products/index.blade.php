@@ -54,7 +54,7 @@
                     @foreach ($products as $key => $product)
                         <tr>
                             <td>{{ ++$key }}</td>
-                            <td>{{ $product->title }} <br> Created at: {{ $product->created_at }}</td>
+                            <td>{{ $product->title }} <br> Created at: {{ date('d-M-Y', strtotime($product->created_at)) }}</td>
                             <td>{{ $product->description }}</td>
                             <td>
                                 <dl class="row mb-0" style="height: 80px; overflow: hidden" id="variant">
