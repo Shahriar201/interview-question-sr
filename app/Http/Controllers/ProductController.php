@@ -7,6 +7,7 @@ use App\Models\ProductVariant;
 use App\Models\ProductVariantPrice;
 use App\Models\Variant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -17,7 +18,45 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return view('products.index');
+        $products = DB::table('product_variants as pv')
+                    ->join('products as p', 'pv.product_id', 'p.id')
+                    ->join('variants as v', 'pv.variant_id', 'v.id')
+                    ->join('product_variant_prices as pvp', 'pv.product_id', 'pvp.product_id')
+                    ->select('pv.*', 'p.*', 'pvp.*')
+                    // ->where('pv.id', 'pvp.product_variant_one')
+                    // ->where('pv.id', 'pvp.product_variant_two')
+                    // ->where('pv.id', 'pvp.product_variant_three')
+                    ->groupBy('p.id')
+                    ->get();
+
+        $variantSize = DB::table('product_variants as pv')
+                    ->join('product_variant_prices as pvp', 'pv.product_id', 'pvp.product_id')
+                    ->join('variants as v', 'pv.variant_id', 'v.id')
+                    ->select('pv.variant', 'pvp.stock')
+                    ->where('v.id', 2)
+                    ->groupBy('pv.variant')
+                    ->get();
+        $variantColor = DB::table('product_variants as pv')
+                    ->join('product_variant_prices as pvp', 'pv.product_id', 'pvp.product_id')
+                    ->join('variants as v', 'pv.variant_id', 'v.id')
+                    ->select('pv.variant', 'pvp.stock')
+                    ->where('v.id', 1)
+                    ->groupBy('pv.variant')
+                    ->get();
+        $variantStyle = DB::table('product_variants as pv')
+                    ->join('product_variant_prices as pvp', 'pv.product_id', 'pvp.product_id')
+                    ->join('variants as v', 'pv.variant_id', 'v.id')
+                    ->select('pv.variant', 'pvp.stock')
+                    ->where('v.id', 6)
+                    ->groupBy('pv.variant')
+                    ->get();
+
+        // dd($variantStyle->toArray());
+        // dd($variantColor->toArray());
+        // dd($variantSize->toArray());
+        // dd($products->toArray());
+
+        return view('products.index', compact('products', 'variantSize', 'variantColor', 'variantStyle'));
     }
 
     /**
