@@ -132,6 +132,7 @@ class ProductController extends Controller
         // dd($request->all());
         $products = DB::table('products')
                 ->where('title', 'like', $request->title.'%')
+                ->whereDate('created_at', '=', $request->date)
                 ->paginate(5);
                 // dd($products);
 
