@@ -22,12 +22,12 @@ class ProductController extends Controller
                     ->join('products as p', 'pv.product_id', 'p.id')
                     ->join('variants as v', 'pv.variant_id', 'v.id')
                     ->join('product_variant_prices as pvp', 'pv.product_id', 'pvp.product_id')
-                    ->select('pv.*', 'p.*', 'pvp.*')
+                    ->select('pv.*', 'p.id as product_table_id', 'p.title as product_title', 'p.description as product_description', 'p.created_at as product_created_at')
                     // ->where('pv.id', 'pvp.product_variant_one')
                     // ->where('pv.id', 'pvp.product_variant_two')
                     // ->where('pv.id', 'pvp.product_variant_three')
                     ->groupBy('p.id')
-                    ->get();
+                    ->paginate(5);
 
         $variantSize = DB::table('product_variants as pv')
                     ->join('product_variant_prices as pvp', 'pv.product_id', 'pvp.product_id')

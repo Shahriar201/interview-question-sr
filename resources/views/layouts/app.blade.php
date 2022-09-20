@@ -156,5 +156,12 @@
 
 <!-- Scripts -->
 <script src="{{ asset('js/app.js') }}" defer></script>
+
+<script>
+    $(document).ready(function() {
+      $('#table').DataTable();
+  } );
+</script>
+
 </body>
 </html>

@@ -39,7 +39,7 @@
 
         <div class="card-body">
             <div class="table-response">
-                <table class="table">
+                <table class="table" id="table">
                     <thead>
                     <tr>
                         <th>#</th>
@@ -54,8 +54,8 @@
                     @foreach ($products as $key => $product)
                         <tr>
                             <td>{{ ++$key }}</td>
-                            <td>{{ $product->title }} <br> Created at: {{ date('d-M-Y', strtotime($product->created_at)) }}</td>
-                            <td>{{ $product->description }}</td>
+                            <td>{{ $product->product_title }} <br> Created at: {{ date('d-M-Y', strtotime($product->product_created_at)) }}</td>
+                            <td>{{ $product->product_description }}</td>
                             <td>
                                 <dl class="row mb-0" style="height: 80px; overflow: hidden" id="variant">
                                     <dt class="col-sm-3 pb-0">
@@ -114,7 +114,8 @@
         <div class="card-footer">
             <div class="row justify-content-between">
                 <div class="col-md-6">
-                    <p>Showing 1 to 10 out of 100</p>
+                    {{-- <p>Showing 1 to 10 out of 100</p> --}}
+                    {{ $products->appends(request()->all())->render('vendor.pagination.bootstrap-5') }}
                 </div>
                 <div class="col-md-2">
 
