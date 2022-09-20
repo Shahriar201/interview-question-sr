@@ -22,7 +22,7 @@ class ProductController extends Controller
                     ->join('products as p', 'pv.product_id', 'p.id')
                     ->join('variants as v', 'pv.variant_id', 'v.id')
                     ->join('product_variant_prices as pvp', 'pv.product_id', 'pvp.product_id')
-                    ->select('pv.*', 'p.id as product_table_id', 'p.title as product_title', 'p.description as product_description', 'p.created_at as product_created_at')
+                    ->select('p.*')
                     // ->where('pv.id', 'pvp.product_variant_one')
                     // ->where('pv.id', 'pvp.product_variant_two')
                     // ->where('pv.id', 'pvp.product_variant_three')
@@ -126,5 +126,15 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         //
+    }
+
+    public function productFilter(Request $request) {
+        // dd($request->all());
+        $products = DB::table('products')
+                ->where('title', 'like', $request->title.'%')
+                ->paginate(5);
+                // dd($products);
+
+        return view('products.index', compact('products'));
     }
 }

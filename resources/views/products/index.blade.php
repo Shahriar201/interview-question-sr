@@ -8,7 +8,7 @@
 
 
     <div class="card">
-        <form action="" method="get" class="card-header">
+        <form action="{{ route('product.filter') }}" method="get" class="card-header">
             <div class="form-row justify-content-between">
                 <div class="col-md-2">
                     <input type="text" name="title" placeholder="Product Title" class="form-control">
@@ -54,8 +54,8 @@
                     @foreach ($products as $key => $product)
                         <tr>
                             <td>{{ ++$key }}</td>
-                            <td>{{ $product->product_title }} <br> Created at: {{ date('d-M-Y', strtotime($product->product_created_at)) }}</td>
-                            <td>{{ $product->product_description }}</td>
+                            <td>{{ $product->title }} <br> Created at: {{ date('d-M-Y', strtotime($product->created_at)) }}</td>
+                            <td>{{ $product->description }}</td>
                             <td>
                                 <dl class="row mb-0" style="height: 80px; overflow: hidden" id="variant">
                                     <dt class="col-sm-3 pb-0">
