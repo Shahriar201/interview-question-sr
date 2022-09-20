@@ -35,21 +35,21 @@ class ProductController extends Controller
                     ->select('pv.variant', 'pvp.stock')
                     ->where('v.id', 2)
                     ->groupBy('pv.variant')
-                    ->get();
+                    ->paginate(5);
         $variantColor = DB::table('product_variants as pv')
                     ->join('product_variant_prices as pvp', 'pv.product_id', 'pvp.product_id')
                     ->join('variants as v', 'pv.variant_id', 'v.id')
                     ->select('pv.variant', 'pvp.stock')
                     ->where('v.id', 1)
                     ->groupBy('pv.variant')
-                    ->get();
+                    ->paginate(5);
         $variantStyle = DB::table('product_variants as pv')
                     ->join('product_variant_prices as pvp', 'pv.product_id', 'pvp.product_id')
                     ->join('variants as v', 'pv.variant_id', 'v.id')
                     ->select('pv.variant', 'pvp.stock')
                     ->where('v.id', 6)
                     ->groupBy('pv.variant')
-                    ->get();
+                    ->paginate(5);
 
         // dd($variantStyle->toArray());
         // dd($variantColor->toArray());
@@ -130,10 +130,25 @@ class ProductController extends Controller
 
     public function productFilter(Request $request) {
         // dd($request->all());
-        $products = DB::table('products')
+        if(isset($request->date)) {
+            $products = DB::table('products')
                 ->where('title', 'like', $request->title.'%')
-                ->whereDate('created_at', '=', $request->date)
+                ->orWhere('pvp.price', '>=', 'price_from')
+                ->orWhere('pvp.price', '<=', 'price_to')
+                ->where(function ($q) use ($request) {
+                    $q->whereDate('created_at', '=', $request->date);
+                })
                 ->paginate(5);
+        } else {
+            $products = DB::table('products')
+                ->join('product_variant_prices as pvp', 'products.id', 'pvp.product_id')
+                ->where('title', 'like', $request->title.'%')
+                ->where('pvp.price', '>=', 'price_from')
+                ->where('pvp.price', '<=', 'price_to')
+                ->groupBy('pvp.product_id')
+                ->paginate(5);
+        }
+
                 // dd($products);
 
         return view('products.index', compact('products'));
